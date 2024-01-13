@@ -9,7 +9,7 @@ public class OpenChestUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI[] CostText;
     [SerializeField] private Animator[] _animator;
 
-    void Start()
+    private void Start()
     {
         _openChest = GetComponent<OpenChest>(); 
         CostText[0].text = _openChest.ChestCost.ToString();
