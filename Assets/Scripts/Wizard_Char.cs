@@ -17,6 +17,7 @@ public class Wizard_Char : MonoBehaviour, ICharacters
         get => throw new System.NotImplementedException(); 
         set => throw new System.NotImplementedException(); 
     }
+    public CharType CharTypes => CharType.Wizard;
     // Характеристики
 
 
@@ -50,7 +51,7 @@ public class Wizard_Char : MonoBehaviour, ICharacters
         get => throw new System.NotImplementedException(); 
         set => throw new System.NotImplementedException(); 
     }
-    
+
     // Методи
     public void ATK1()
     {

@@ -1,9 +1,18 @@
+
+public enum CharType 
+{
+    archer,
+    melee,
+    Wizard
+}
+
 interface ICharacters 
 {
     // Параметри
-    public int CharactersID { get; }
-    public string Name { get; }
-    //public float MoveSpeed { get; set; }
+    int CharactersID { get; }
+    string Name { get; }
+    CharType CharTypes { get; }
+    //public float MoveSpeed { get; }
 
     // Характеристики
     float Health { get; }

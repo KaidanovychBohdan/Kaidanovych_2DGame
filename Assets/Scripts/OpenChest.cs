@@ -4,21 +4,30 @@ using UnityEngine;
 using System;
 using Zenject;
 
+public enum DropType
+{
+    Common,       //50%
+    Rare,        //25%
+    Epic,       //20%
+    Legendary  //5%
+}
+
 public class OpenChest : MonoBehaviour
 {
     public int ChestCost;
 
-    public CoinController WW;
-
     [Inject] private Icoin _coins;
 
     [SerializeField] private RandomDropByType _randomDropGenerator;
+    [SerializeField] private DropFromBox _dropFromBox;
 
     private void Start()
     {
         _randomDropGenerator = new RandomDropByType();
+        _dropFromBox = GetComponent<DropFromBox>();
         CoinController.CoinsChanged += OnCoinsChanged;
     }
+
     private void OnDestroy()
     {
         CoinController.CoinsChanged -= OnCoinsChanged;
@@ -62,17 +71,10 @@ public class OpenChest : MonoBehaviour
     }
     private void GenerateRandomDrop()
     {
-        DropType randomDrop = _randomDropGenerator.GetRandomDrop();
-        Debug.Log("Received a random drop: " + randomDrop);
+        var randomDrop = _randomDropGenerator.GetRandomDrop();
+        var items = _dropFromBox.ChooseRandomItemByType(randomDrop); // Додати інвентарь в який записувати випадені предемети
+        Debug.Log("Received a random drop: " + randomDrop + "\nRecieved Item:" + items.Name);
     }
-}
-
-public enum DropType
-{
-    Common,       //50%
-    Rare,        //25%
-    Epic,       //20%
-    Legendary  //5%
 }
 
 public class RandomDropByType

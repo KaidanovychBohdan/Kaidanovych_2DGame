@@ -8,8 +8,8 @@ public class CoinController : Icoin
 {
     public static event Action<int> CoinsChanged;
 
-    [SerializeField] private string _coinName;
-    [SerializeField] private int _coinAmount;
+    private string _coinName;
+    private int _coinAmount;
 
     public string name
     {
