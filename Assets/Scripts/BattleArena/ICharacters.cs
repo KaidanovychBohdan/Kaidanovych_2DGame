@@ -11,23 +11,26 @@ interface ICharacters
     // Параметри
     int CharactersID { get; }
     string Name { get; }
+    bool IsDead { get; }
     CharType CharTypes { get; }
     //public float MoveSpeed { get; }
 
     // Характеристики
     float Health { get; }
+    float Speed { get; }
     float DMGATK { get; }
-    float CritChancePercents { get; }
-    float EnergyRecoveryPercents { get; }
+    int CritChance { get; }
+    int EnergyRecovery { get; }
     float EnergyForUltimates { get; }
     float NeedEnergyToUseUltimates { get; }
 
     // Методи
-    void ChooseATK(); // обираємо вид атаки + вогора на якого вона буде застосована
+    //void ChooseATK(); // обираємо вид атаки + вогора на якого вона буде застосована
     void MoveToEnemy(); // Персонаж іде до заданого ворога і завдає удару ????
     void MoveFromEnemyBack(); // Персонаж після атаки повертається назад
     void ATK1(); // 1 атака персонажа слаба атака урон повинен бути меньшим ??????
     void ATK2(); // 2 атака персонажа урон який показаний в характеристиках ??????
     void Ultimate(); // 3 атака урон повинен скейлитися в процентах + персонаж повинен накопичувати енергію щоб використати атаку
-    void GetDMG(); // Метод який буде відповідати за обробку отриманого урону по персонажу
+    void GetDMG(int Damage); // Метод який буде відповідати за обробку отриманого урону по персонажу
+    void Dead();
 }
