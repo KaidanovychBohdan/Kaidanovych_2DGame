@@ -18,13 +18,19 @@ public class OpenChest : MonoBehaviour
 
     [Inject] private Icoin _coins;
 
-    [SerializeField] private RandomDropByType _randomDropGenerator;
     [SerializeField] private DropFromBox _dropFromBox;
+
+    private RandomDropByType _randomDropGenerator;
+
+    private OpenChestUI _openChestUI;
+
+    //public event Action<bool> ChestOpen;
 
     private void Start()
     {
         _randomDropGenerator = new RandomDropByType();
         _dropFromBox = GetComponent<DropFromBox>();
+        _openChestUI = GetComponent<OpenChestUI>();
         CoinController.CoinsChanged += OnCoinsChanged;
     }
 
@@ -73,6 +79,7 @@ public class OpenChest : MonoBehaviour
     {
         var randomDrop = _randomDropGenerator.GetRandomDrop();
         var items = _dropFromBox.ChooseRandomItemByType(randomDrop); // Додати інвентарь в який записувати випадені предемети
+        _openChestUI.IsItemReceived(items);
         Debug.Log("Received a random drop: " + randomDrop + "\nRecieved Item:" + items.Name);
     }
 }

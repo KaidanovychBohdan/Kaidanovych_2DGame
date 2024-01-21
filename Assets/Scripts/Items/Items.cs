@@ -7,7 +7,7 @@ public class Items : ScriptableObject
     public int Id;
     public string Name;
     public Sprite UIDisplay;
-    public GameObject prefab;
+    public string LinkOnPrefab;
     public DropType dropType;
     [TextArea(15, 20)]
     public string description;

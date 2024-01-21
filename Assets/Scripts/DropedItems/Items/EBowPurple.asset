@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 0}
-  m_Name: LWizard1
-  m_EditorClassIdentifier: Assembly-CSharp::LegendaryItem
-  Id: 6
-  Name: Wizard1
-  UIDisplay: {fileID: 2059760851, guid: c25bf11c54d466e4f82dbb24de5f2adb, type: 3}
-  prefab: {fileID: 2000394663060234649, guid: a05448c1ff046b54394ee0019eb0c7c4, type: 3}
-  dropType: 3
+  m_Name: EBowPurple
+  m_EditorClassIdentifier: Assembly-CSharp::EpicItem
+  Id: 5
+  Name: PurpleBow
+  UIDisplay: {fileID: 21300000, guid: 7b5e68d76c35bce428de88f002b03323, type: 3}
+  prefab: {fileID: 0}
+  dropType: 0
   description: 
