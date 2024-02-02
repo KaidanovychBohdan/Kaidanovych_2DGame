@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   CharTypes: 1
   Health: 300
-  Speed: 10
+  Speed: 5
   DMGATK: 75
   CritChance: 5
   EnergyRecovery: 5

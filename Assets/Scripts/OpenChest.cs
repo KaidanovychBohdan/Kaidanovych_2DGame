@@ -14,77 +14,55 @@ public enum DropType
 
 public class OpenChest : MonoBehaviour
 {
-    public int ChestCost;
+    [SerializeField] private int _chestCost;
 
     [Inject] private Icoin _coins;
 
-    [SerializeField] private DropFromBox _dropFromBox;
-
+    private DropFromBox _dropFromBox;
     private RandomDropByType _randomDropGenerator;
 
-    private OpenChestUI _openChestUI;
-
-    //public event Action<bool> ChestOpen;
+    public string ErrorMessage;
+    public static event Action<Items> ChestOpen;
+    public static event Action<string> CantOpen;   
 
     private void Start()
     {
         _randomDropGenerator = new RandomDropByType();
         _dropFromBox = GetComponent<DropFromBox>();
-        _openChestUI = GetComponent<OpenChestUI>();
-        CoinController.CoinsChanged += OnCoinsChanged;
     }
 
-    private void OnDestroy()
+    public void BuyAndOpen(int amount) 
     {
-        CoinController.CoinsChanged -= OnCoinsChanged;
-    }
-
-    private void OnCoinsChanged(int newAmount)
-    {
-        Debug.Log("Coins changed. New balance: " + newAmount);
-    }
-
-    public void BuyAndOpen() 
-    {
-        if (_coins.amount >= ChestCost)
+        if (amount != 10 && _coins.amount >= _chestCost)
         {
-            _coins.RemoveCoins(ChestCost);
+            _coins.RemoveCoins(_chestCost);
             GenerateRandomDrop();
         }
-        else
+        else if (amount == 10 && _coins.amount >= _chestCost * amount)
         {
-            Debug.Log("Not enough coins to buy the chest");
-        }
-    }
+            int CostForTen = _chestCost * amount;
+            
+            _coins.RemoveCoins(CostForTen);
 
-    public void BuyAndOpen10()
-    {
-        int totalCost = ChestCost * 10;
-
-        if (_coins.amount >= totalCost)
-        {
-            _coins.RemoveCoins(totalCost);
-
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < amount; i++)
             {
                 GenerateRandomDrop();
             }
         }
         else
         {
-            Debug.Log("Not enough coins to buy 10 chests");
+            CantOpen?.Invoke(ErrorMessage);
         }
     }
     private void GenerateRandomDrop()
     {
         var randomDrop = _randomDropGenerator.GetRandomDrop();
-        var items = _dropFromBox.ChooseRandomItemByType(randomDrop); // Додати інвентарь в який записувати випадені предемети
-        _openChestUI.IsItemReceived(items);
-        Debug.Log("Received a random drop: " + randomDrop + "\nRecieved Item:" + items.Name);
+        var item = _dropFromBox.ChooseRandomItemByType(randomDrop); 
+        ChestOpen?.Invoke(item);
     }
 }
 
-public class RandomDropByType
+public class RandomDropByType // рандомайзер але так більше не робити бо -бланс
 {
     private static System.Random random = new System.Random();
 

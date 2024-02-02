@@ -3,16 +3,8 @@ using UnityEngine;
 
 public class FighterMove : MonoBehaviour
 {
-    [SerializeField] private float _rotateSpeed;
-    [SerializeField] private float _moveSpeed;
-
-
-    [SerializeField] private SpriteRenderer _spriteRotation; // тест
-
-    private void Awake()
-    {
-        _spriteRotation = GetComponent<SpriteRenderer>();
-    }
+    private float _rotateSpeed = 180f;
+    private float _moveSpeed = 10f;
 
     public Coroutine StartMove(Transform target, float stoppingDistance = 0)
     {

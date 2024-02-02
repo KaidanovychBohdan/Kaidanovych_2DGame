@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class FighterSpawner : MonoBehaviour
 {
-    [SerializeField] private GameObject[] _heroSide;
-    [SerializeField] private GameObject[] _enemiesSide;
+    [SerializeField] private GameObject[] _heroSide; 
+    [SerializeField] private GameObject[] _enemiesSide; 
 
     public List<Fighter> SpawnEnemies(Fighter[] enemies)
     {
@@ -33,11 +33,10 @@ public class FighterSpawner : MonoBehaviour
     
         for(int i = 0; i < fighterTemplate.Length; i++) 
         {
-            Fighter newFighter = Instantiate(fighterTemplate[i],spawnPoints[i].transform);
+            Fighter newFighter = Instantiate(fighterTemplate[i], spawnPoints[i].transform);
             newFighter.CurrentStayPoint(spawnPoints[i]);
             fighter.Add(newFighter);
         }
         return fighter;
     }
-
 }

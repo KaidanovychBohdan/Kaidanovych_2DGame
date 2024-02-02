@@ -15,6 +15,6 @@ MonoBehaviour:
   Id: 6
   Name: Wizard1
   UIDisplay: {fileID: 2059760851, guid: c25bf11c54d466e4f82dbb24de5f2adb, type: 3}
-  prefab: {fileID: 2000394663060234649, guid: a05448c1ff046b54394ee0019eb0c7c4, type: 3}
-  dropType: 0
+  LinkOnPrefab: 
+  dropType: 3
   description: 

@@ -1,16 +1,20 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Zenject;
 
 public class Arena : MonoBehaviour
 {
-    [SerializeField] private Fighter[] _heroesTemplate;
+    [SerializeField] private Fighter[] _heroesTemplate; // сделать або передавать масив обраних героїв або шото придумать
+
     [SerializeField] private Fighter[] _enemiesTemplate;
 
     private List<Fighter> _heroes;
     private List<Fighter> _enemies;
     private Queue<Fighter> _readyToFight;
     private FighterSpawner _spawner;
+
+    [Inject] private Icoin _coin;
 
     private void Awake()
     {
@@ -55,7 +59,16 @@ public class Arena : MonoBehaviour
             IncreaseTurnMeter(_heroes);
             IncreaseTurnMeter(_enemies);
         }
-        Debug.Log("Battle end"); // дописать шо буде при перемозі або поразці
+        if (_heroes.Count > 0) {
+            Debug.Log("Battle win"); // Add coins and some materials
+            _coin.AddCoins(1000);
+            Destroy(this.gameObject);
+        }
+        else 
+        {
+            Debug.Log("Battle lose");
+            Destroy(this.gameObject);
+        }
     }
     private void IncreaseTurnMeter(List<Fighter> fighter) 
     {

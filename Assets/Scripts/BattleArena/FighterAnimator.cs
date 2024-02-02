@@ -33,6 +33,7 @@ public class FighterAnimator : MonoBehaviour
     }
     public void Dead()
     {
+        _animator.SetBool(IdleParametr, false);
         _animator.SetBool(DeadParametr, true);
     }
     public void Idle()

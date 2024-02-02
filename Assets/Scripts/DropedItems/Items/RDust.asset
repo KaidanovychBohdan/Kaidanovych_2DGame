@@ -15,6 +15,6 @@ MonoBehaviour:
   Id: 2
   Name: Dust
   UIDisplay: {fileID: 21300000, guid: 1df7e747e786bd240802776a34ebf8ed, type: 3}
-  prefab: {fileID: 0}
+  LinkOnPrefab: 
   dropType: 1
   description: 

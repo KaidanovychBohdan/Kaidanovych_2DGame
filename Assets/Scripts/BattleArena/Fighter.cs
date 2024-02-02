@@ -6,9 +6,9 @@ using UnityEngine.Events;
 [RequireComponent(typeof(FighterAnimator), typeof(FighterAttack), typeof(FighterMove))]
 public class Fighter : MonoBehaviour
 {
-    [SerializeField] private float _maxHealth;
-    [SerializeField] private Fighter _target;
-    [SerializeField] private float _fightDistance;
+    private float _maxHealth; 
+    [SerializeField] private Fighter _target; 
+    [SerializeField] private float _fightDistance; 
 
     public PlayerParams playerParams;
 
@@ -31,6 +31,7 @@ public class Fighter : MonoBehaviour
         _turnMeter = GetComponent<FighterTurnMeter>();
 
         _health = playerParams.Health;
+        _maxHealth = _health;
     }
 
 

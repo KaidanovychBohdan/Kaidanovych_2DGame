@@ -15,6 +15,6 @@ MonoBehaviour:
   Id: 0
   Name: Slime
   UIDisplay: {fileID: 21300000, guid: 267a4b7ea8aa4274fb1714aa34c6e912, type: 3}
-  prefab: {fileID: 0}
+  LinkOnPrefab: 
   dropType: 0
   description: 

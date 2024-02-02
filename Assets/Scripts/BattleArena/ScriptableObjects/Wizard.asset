@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Wizard
   m_EditorClassIdentifier: 
   CharTypes: 2
-  Health: 60
+  Health: 250
   Speed: 10
   DMGATK: 50
   CritChance: 5

@@ -15,6 +15,6 @@ MonoBehaviour:
   Id: 1
   Name: Bones
   UIDisplay: {fileID: 21300000, guid: 9ad008479c565364cb37d449a275b879, type: 3}
-  prefab: {fileID: 0}
+  LinkOnPrefab: 
   dropType: 0
   description: 

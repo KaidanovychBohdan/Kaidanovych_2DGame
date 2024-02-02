@@ -6,54 +6,124 @@ using TMPro;
 
 public class OpenChestUI : MonoBehaviour
 {
-    [SerializeField] private OpenChest _openChest;
-    [SerializeField] private TextMeshProUGUI[] CostText;
+    [SerializeField] private TextMeshProUGUI[] _costText;
     [SerializeField] private Animator[] _animator;
 
-    [SerializeField] private GameObject Received;
-    [SerializeField] private GameObject getItemPrefab; // Prefab for the item card
-    [SerializeField] private Transform itemContainer; // Parent transform for created item cards
+    [SerializeField] private GameObject _received;
+    [SerializeField] private GameObject _itemCard; 
+    [SerializeField] private Transform _itemContainer;
 
-    public Image itemImage;
-    public TextMeshProUGUI itemText;
+    [SerializeField] private GameObject _errorMessage;
+    [SerializeField] private TextMeshProUGUI _errorText;
 
+    private Image _itemImage;
+    private TextMeshProUGUI _itemText;
+    private List<GameObject> _itemsCard;
+    private int _chestCost;
+
+    public int X_START; // -4
+    public int Y_START; // 1
+    public int X_SPACE_BETWEEN_ITEMS; // 2
+    public int Y_SPACE_BETWEEN_ITEMS; // 2
+    public int NUMBER_OF_COLUMNS; // 5
+    
     private void Start()
     {
-        _openChest = GetComponent<OpenChest>();
-        CostText[0].text = _openChest.ChestCost.ToString();
-        CostText[1].text = (_openChest.ChestCost * 10).ToString();
+        _chestCost = 100;
+        _costText[0].text = _chestCost.ToString();
+        _costText[1].text = (_chestCost * 10).ToString();
+        _itemsCard = new List<GameObject>();
+        OpenChest.ChestOpen += IsItemReceived;
+        OpenChest.CantOpen += IsError;
     }
 
-    public void IsItemReceived(Items _item)
+    private void OnDestroy()
     {
-        Instantiate(getItemPrefab, itemContainer);
-        
-        GetPrefab(getItemPrefab);
-        SetItem(_item);
-        Received.SetActive(true);
+        OpenChest.ChestOpen -= IsItemReceived;
+        OpenChest.CantOpen -= IsError;
     }
 
+    private void IsError(string message) 
+    {
+        _errorMessage.SetActive(true);
+        _errorText.text = message;
+    }
+    private void IsItemReceived(Items item)
+    {
+        var prefab = Instantiate(_itemCard, _itemContainer);
+        
+        _itemsCard.Add(prefab);
+        
+        GetPrefabComponents(prefab);
+        SetRecievedItem(item, prefab);
+        
+        if (_itemsCard.Count == 10)
+        {
+            for (int i = 0; i < _itemsCard.Count; i++)
+            {
+                _itemsCard[i].GetComponent<RectTransform>().localPosition = GetPosition(i);
+            }
+        }
+
+        _received.SetActive(true);
+    }
+
+    private void GetPrefabComponents(GameObject itemPrefab)
+    {
+        _itemImage = itemPrefab.transform.GetChild(0).GetComponentInChildren<Image>();
+        _itemText = itemPrefab.transform.GetChild(1).GetComponentInChildren<TextMeshProUGUI>();
+    }
+
+    private void SetRecievedItem(Items item, GameObject prefab)
+    {
+        if (_itemImage != null && _itemText != null)
+        {
+            _itemImage.sprite = item.UIDisplay;
+            _itemText.text = item.Name;
+            
+            var ItemColor = prefab.GetComponent<Image>();
+
+            switch (item.dropType)
+            {
+                case DropType.Common:
+                    ItemColor.color = new Color(0.2f, 0.2f, 0.2f, 1f);
+                    break;
+
+                case DropType.Rare:
+                    ItemColor.color = new Color(0, 0, 0.5f, 1f);
+                    break;
+
+                case DropType.Epic:
+                    ItemColor.color = new Color(0.5f, 0, 0.5f, 1f);
+                    break;
+
+                case DropType.Legendary:
+                    ItemColor.color = new Color(0.7f, 0.7f, 0, 1f);
+                    break;
+
+                default:
+                    break;
+            }
+        }
+    }
+    private Vector3 GetPosition(int i)
+    {
+        return new Vector3(X_START + (X_SPACE_BETWEEN_ITEMS * (i % NUMBER_OF_COLUMNS)), 
+            Y_START + (-Y_SPACE_BETWEEN_ITEMS * (i / NUMBER_OF_COLUMNS)), 
+            0f);
+    }
     public void CloseReceived()
     {
-        Received.SetActive(false);
-        foreach (Transform child in itemContainer)
+        foreach (Transform child in _itemContainer)
         {
             Destroy(child.gameObject);
         }
+        _itemsCard = new List<GameObject>();
+        _received.SetActive(false);
     }
-
-    public void GetPrefab(GameObject _itemPrefab)
+    public void CloseError() 
     {
-        itemImage = _itemPrefab.GetComponentInChildren<Image>(true);
-        itemText = _itemPrefab.GetComponentInChildren<TextMeshProUGUI>(true);
-    }
-
-    public void SetItem(Items item)
-    {
-        if (itemImage != null && itemText != null)
-        {
-            itemImage.sprite = item.UIDisplay;
-            itemText.text = item.Name;
-        }
+        _errorMessage.SetActive(false);
+        _errorText.text = "";
     }
 }
