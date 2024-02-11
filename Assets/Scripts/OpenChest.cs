@@ -14,6 +14,7 @@ public enum DropType
 
 public class OpenChest : MonoBehaviour
 {
+    private InventoryObjects _inventory;
     [SerializeField] private int _chestCost;
 
     [Inject] private Icoin _coins;
@@ -22,11 +23,12 @@ public class OpenChest : MonoBehaviour
     private RandomDropByType _randomDropGenerator;
 
     public string ErrorMessage;
-    public static event Action<Items> ChestOpen;
-    public static event Action<string> CantOpen;   
+    public event Action<Items> ChestOpen;
+    public event Action<string> CantOpen;   
 
     private void Start()
     {
+        _inventory = Resources.Load<InventoryObjects>("Inventories/Inventory");
         _randomDropGenerator = new RandomDropByType();
         _dropFromBox = GetComponent<DropFromBox>();
     }
@@ -40,12 +42,9 @@ public class OpenChest : MonoBehaviour
         }
         else if (amount == 10 && _coins.amount >= _chestCost * amount)
         {
-            int CostForTen = _chestCost * amount;
-            
-            _coins.RemoveCoins(CostForTen);
-
             for (int i = 0; i < amount; i++)
             {
+                _coins.RemoveCoins(_chestCost);
                 GenerateRandomDrop();
             }
         }
@@ -57,8 +56,12 @@ public class OpenChest : MonoBehaviour
     private void GenerateRandomDrop()
     {
         var randomDrop = _randomDropGenerator.GetRandomDrop();
-        var item = _dropFromBox.ChooseRandomItemByType(randomDrop); 
-        ChestOpen?.Invoke(item);
+        var item = _dropFromBox.ChooseRandomItemByType(randomDrop);
+        if (item != null)
+        {
+            _inventory.AddItem(item, 1);
+            ChestOpen?.Invoke(item);
+        }
     }
 }
 

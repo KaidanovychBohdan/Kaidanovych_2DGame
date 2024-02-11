@@ -6,22 +6,23 @@ using UnityEngine.Events;
 [RequireComponent(typeof(FighterAnimator), typeof(FighterAttack), typeof(FighterMove))]
 public class Fighter : MonoBehaviour
 {
-    private float _maxHealth; 
-    [SerializeField] private Fighter _target; 
-    [SerializeField] private float _fightDistance; 
-
     public PlayerParams playerParams;
 
-    [SerializeField] private float _health;
+    [SerializeField] private Fighter _target; 
+    [SerializeField] private float _fightDistance;
+
+    private float _maxHP;
+    private float _def;
+    private float _health;
     private GameObject _stayPoint;
     private FighterAnimator _animator;
     private FighterAttack _attack;
     private FighterMove _move;
     private FighterTurnMeter _turnMeter;
+    private FighterUI _ui; 
 
     public event UnityAction<Fighter> TurnMeterFilled;
     public event UnityAction<Fighter> Died;
-
 
     private void Awake()
     {
@@ -29,18 +30,39 @@ public class Fighter : MonoBehaviour
         _attack = GetComponent<FighterAttack>();
         _move = GetComponent<FighterMove>();
         _turnMeter = GetComponent<FighterTurnMeter>();
-
-        _health = playerParams.Health;
-        _maxHealth = _health;
+        _ui = GetComponentInChildren<FighterUI>();
+        InitializeFighter();
     }
 
-
-    public void TurnMeter()
+    private void InitializeFighter() 
     {
-        _turnMeter.Increase();
-        if (_turnMeter.CanOffensive) 
+        _health = playerParams.Health;
+        _attack.setDamage(playerParams.ATK);
+        _turnMeter.setValue(playerParams.Speed);
+
+        _maxHP = _health;
+        _def = playerParams.DEF;
+    }
+
+    private void Start()
+    {
+        _ui.UpdateHealth(_health);
+    }
+
+    public void TurnMeter(bool test)
+    {
+        if (!test)
         {
-            TurnMeterFilled?.Invoke(this);
+            _turnMeter.Increase();
+            
+            if (_turnMeter.CanOffensive)
+            {
+                TurnMeterFilled?.Invoke(this);
+            }
+        }
+        else 
+        {
+            _turnMeter.Reset();
         }
     }
 
@@ -49,10 +71,12 @@ public class Fighter : MonoBehaviour
         _stayPoint = spawnPoint;
     }
 
-    public void GetDMG(int damage) 
+    public void GetDMG(float damage) 
     {
-        _health -= damage;
+        var damage_after_defense = damage * (1 - _def / 100);
+        _health -= damage_after_defense;
 
+        _ui.UpdateHealth(_health);
         if (_health <= 0) 
         {
             Die();

@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: EBowBlue
   m_EditorClassIdentifier: 
   ItemsForCraft:
-  - {fileID: 11400000, guid: cf75d508923592548a5d0afb17f4269c, type: 2}
-  - {fileID: 11400000, guid: 4779db3be9b39094796c5b9071dce5a6, type: 2}
+  - {fileID: 11400000, guid: 56def2ed25873ee41b1fff94529366b3, type: 2}
+  - {fileID: 11400000, guid: dac6edca6594bb944a8cf11073b7192f, type: 2}
   CraftedItem: {fileID: 11400000, guid: d6332ded5d4610e48a288aff5e48e914, type: 2}

@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
 
@@ -5,51 +7,66 @@ public class GameController : MonoBehaviour
 {
     public InventoryObjects Inventory;
 
-    [SerializeField] private Camera _camera;
-    // Фабрику для створення ГеймОбжектів нижче за заданою позицією + переміщувати туди камеру + розмір камери якщо потрібно  
+    [SerializeField] private Camera cameras;
 
-    [SerializeField] private GameObject _openingCases;
-    [SerializeField] private GameObject[] _battleArena;
-    [SerializeField] private GameObject _craft;
-    [SerializeField] private GameObject _upgrade;
+    [SerializeField] private GameObject escapeMenu;
 
-    [SerializeField] private Transform _prefabPosition;
+    [SerializeField] private GameObject openingCases;
+    [SerializeField] private GameObject ChosingLvl;
+    [SerializeField] private GameObject craft;
+    [SerializeField] private GameObject upgrade;
 
-    [Inject] private DiContainer _container;
+    [SerializeField] private Transform prefabPosition;
+
+
+    [Inject] private DiContainer Container;
+
+    private GameObject _createdPrefab;
+    private ChooseLevelUI LevelUI;
+    [SerializeField] private List<Fighter> heroes;
 
     private bool IsCreate = false;
+    private bool IsOpen = true;
 
-    private void Start()
-    {
-        OpenChest.ChestOpen += AddItemToInventory;
-    }
-
-    private void OnDestroy()
-    {
-        OpenChest.ChestOpen -= AddItemToInventory;
-    }
+    //private void Start()
+    //{
+    //    fighters = new List<Fighter>();
+    //}
 
     private void Update()
     {
         if (!IsCreate)
         {
-            if (Input.GetKeyDown(KeyCode.E)) 
+            if (Input.GetKeyDown(KeyCode.Escape))
             {
-                Create(0);
-            }
-            if (Input.GetKeyDown(KeyCode.Q))
-            {
-                Create(1);
-            }
-            if (Input.GetKeyDown(KeyCode.A))
-            {
-                Create(2);
-            }
-            if (Input.GetKeyDown(KeyCode.D))
-            {
-                Create(3);
+                escapeMenu.SetActive(IsOpen);
+                IsOpen = !IsOpen;
             }
         }
+        else if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            ReturnToMainWindow();
+        }
+    }
+
+    private void OnDestroy()
+    {
+        if(LevelUI != null)
+            LevelUI.IsArenaChoose -= CreateArena;
+    }
+
+    private void ReturnToMainWindow() 
+    {
+        cameras.transform.position = new Vector3(0, 0, -10);
+        cameras.orthographicSize = 5;
+        Destroy(_createdPrefab);
+        IsCreate = false;
+    }
+
+    public void Reverse() 
+    {
+        escapeMenu.SetActive(IsOpen);
+        IsOpen = !IsOpen;
     }
 
     public void Create(int number) 
@@ -57,35 +74,61 @@ public class GameController : MonoBehaviour
         switch (number) 
         {
             case 0:
-                CreatePrefab(_openingCases);
+                CreatePrefab(openingCases);
                 break;
             case 1:
-                _camera.orthographicSize = 10;
-                CreatePrefab(_battleArena[0]);
+                CreatePrefab(ChosingLvl);
+                if (LevelUI != null)
+                {
+                    LevelUI.IsArenaChoose += CreateArena;
+                }
                 break;
             case 2:
-                CreatePrefab(_craft);
+                CreatePrefab(craft);
                 break;
             case 3:
-                CreatePrefab(_upgrade);
+                CreatePrefab(upgrade);
                 break;
         } 
     }
 
-    private void CreatePrefab(GameObject prefab) // change name in the future
+    private void CreatePrefab(GameObject prefab)
     {
+        cameras.transform.position = new Vector3(34, 0, -10);
+        _createdPrefab = Container.InstantiatePrefab(prefab, prefabPosition.position, Quaternion.identity, prefabPosition);
+        if(ChosingLvl.name + "(Clone)" == _createdPrefab.name) 
+        {
+            LevelUI = _createdPrefab.GetComponent<ChooseLevelUI>();
+        }
         IsCreate = true;
-        _camera.transform.position = new Vector3(34, 0, -10);
-        _container.InstantiatePrefab(prefab, _prefabPosition.position, Quaternion.identity, _prefabPosition);
     }
 
-    private void AddItemToInventory(Items item) // need to remaster this method cos its not what i wont
+    private void CreateArena(GameObject prefab) 
     {
-        Inventory.AddItem(item, 1);
+        var arena = prefab.GetComponent<Arena>();
+        if (arena != null) 
+        {
+            arena.SetHeroes(heroes);
+        }
+        if (IsCreate) 
+        {
+            Destroy(_createdPrefab);
+            CreatePrefab(prefab);
+        }
+        else 
+        {
+            CreatePrefab(prefab);
+        }
+        cameras.orthographicSize = 10;
     }
 
     private void OnApplicationQuit()
     {
         Inventory.Container.Item = new InventorySlot[96];
+    }
+
+    public void ExitFromGame() 
+    {
+        Application.Quit();
     }
 }

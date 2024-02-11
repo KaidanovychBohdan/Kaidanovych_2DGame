@@ -4,10 +4,14 @@ using UnityEngine;
 
 public class FighterAttack : MonoBehaviour
 {
-    [SerializeField] private int _damage;
+    private float _damage;
 
     private Fighter _target;
 
+    public void setDamage(float damage) 
+    {
+        _damage = damage;
+    }
     public void SetTarget(Fighter fighter) 
     {
         _target = fighter;

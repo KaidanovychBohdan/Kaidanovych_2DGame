@@ -12,11 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2af4f107e9659344da89bc6aefff22de, type: 3}
   m_Name: Archer
   m_EditorClassIdentifier: 
-  CharTypes: 0
+  CharType: 0
+  CharRoles: 0
   Health: 200
+  ATK: 50
+  DEF: 10
   Speed: 15
-  DMGATK: 40
   CritChance: 5
   EnergyRecovery: 5
   EnergyForUltimates: 0
   NeedEnergyToUseUltimates: 110
+  CharXP: 0
+  CharLevel: 1

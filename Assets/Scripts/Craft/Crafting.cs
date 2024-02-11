@@ -5,23 +5,27 @@ using System;
 
 public class Crafting : MonoBehaviour
 {
-    [SerializeField] private CraftingRecipe[] _recipes;
-    [SerializeField] private InventoryObjects _inventory;
+    private CraftingRecipe[] _recipes;
+    private InventoryObjects _inventory;
+    private CraftingUI _craftingUI;
 
-    static public event Action<CraftingRecipe[]> GettingRecipes;
-    static public event Action<string> InfoAbt;
+    public event Action<CraftingRecipe[]> GettingRecipes;
+    public event Action<string> InfoAbt;
 
     private void Awake()
     {
+        _craftingUI = GetComponent<CraftingUI>();
         _recipes = Resources.LoadAll<CraftingRecipe>("ScriptableObjects/Recipe");
         _inventory = Resources.Load<InventoryObjects>("Inventories/Inventory");
-        GettingRecipes?.Invoke(_recipes);
-        CraftingUI.ButtonClicked += CraftSomething;
+        _craftingUI.ButtonClicked += CraftSomething;
     }
-
+    private void Start()
+    {
+        GettingRecipes?.Invoke(_recipes);
+    }
     private void OnDestroy()
     {
-        CraftingUI.ButtonClicked -= CraftSomething;
+        _craftingUI.ButtonClicked -= CraftSomething;
     }
 
     public void CraftSomething(int numRecipe) 

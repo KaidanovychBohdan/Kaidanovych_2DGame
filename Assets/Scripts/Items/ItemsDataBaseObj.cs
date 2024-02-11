@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEditor;
 
 [CreateAssetMenu(fileName = "New Item Database", menuName = "Items/Database")]
 public class ItemDataBaseObj : ScriptableObject, ISerializationCallbackReceiver

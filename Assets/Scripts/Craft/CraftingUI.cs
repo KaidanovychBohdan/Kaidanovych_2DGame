@@ -5,11 +5,11 @@ using UnityEngine.UI;
 using System;
 using TMPro;
 
-
 public class CraftingUI : MonoBehaviour
 {
-    [SerializeField] private CraftingRecipe[] _recipes;
-
+    private CraftingRecipe[] _recipes;
+    private List<GameObject> TimeList; // придумать норм назву
+    private Crafting _crafting;
 
     [SerializeField] private Transform CraftingCardPosition;
     [SerializeField] private GameObject CraftingCard;
@@ -17,17 +17,18 @@ public class CraftingUI : MonoBehaviour
     [SerializeField] private Transform InformationPanelPosition;
     [SerializeField] private GameObject InformationPanel;
 
-    [SerializeField] private List<GameObject> TimeList;
-
-    static public event Action<int> ButtonClicked;
+    public event Action<int> ButtonClicked;
 
     private void Awake()
     {
-        Crafting.GettingRecipes += SetRecipe;
-        Crafting.InfoAbt += InfoAbout;
+        _crafting = GetComponent<Crafting>();
+        _crafting.GettingRecipes += SetRecipe;
+        _crafting.InfoAbt += InfoAbout;
     }
+
     private void Start()
     {
+        TimeList = new List<GameObject>();
         if (_recipes != null)
         {
             SetRecipeToCards();
@@ -36,8 +37,8 @@ public class CraftingUI : MonoBehaviour
 
     private void OnDestroy()
     {
-        Crafting.GettingRecipes -= SetRecipe;
-        Crafting.InfoAbt -= InfoAbout;
+        _crafting.GettingRecipes -= SetRecipe;
+        _crafting.InfoAbt -= InfoAbout;
     }
 
     private void SetRecipe(CraftingRecipe[] recipes) 

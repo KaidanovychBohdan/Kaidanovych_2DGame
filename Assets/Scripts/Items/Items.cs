@@ -1,50 +1,35 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum Attributes
+{
+    CritChance,
+    ATK,
+    DEF,
+    HP
+}
+
+[CreateAssetMenu(fileName = "New Item", menuName = "Items/Item")]
 public class Items : ScriptableObject
 {
     public int Id;
+    public DropType dropType;
     public string Name;
     public Sprite UIDisplay;
-    public string LinkOnPrefab;
-    public DropType dropType;
     [TextArea(15, 20)]
     public string description;
+
+    public EquipBuffs buffs;
+    public string LinkOnPrefab;
+    public float ItemXP;
+    public int ItemLevel;
 }
 
-[CreateAssetMenu(fileName = "New Item", menuName = "Items/ItemCommon")]
-public class CommonItem : Items
+[System.Serializable]
+public class EquipBuffs
 {
-    private void Awake()
-    {
-        dropType = DropType.Common;
-    }
-}
-
-[CreateAssetMenu(fileName = "New Item", menuName = "Items/ItemRare")]
-public class RareItem : Items
-{
-    private void Awake()
-    {
-        dropType = DropType.Rare;
-    }
-}
-
-[CreateAssetMenu(fileName = "New Item", menuName = "Items/ItemEpic")]
-public class EpicItem : Items
-{
-    private void Awake()
-    {
-        dropType = DropType.Epic;
-    }
-}
-
-[CreateAssetMenu(fileName = "New Item", menuName = "Items/ItemLegendary")]
-public class LegendaryItem : Items
-{
-    private void Awake()
-    {
-        dropType = DropType.Legendary;
-    }
+    public Attributes buff;
+    public float value;
 }

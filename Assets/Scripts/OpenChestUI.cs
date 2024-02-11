@@ -7,7 +7,6 @@ using TMPro;
 public class OpenChestUI : MonoBehaviour
 {
     [SerializeField] private TextMeshProUGUI[] _costText;
-    [SerializeField] private Animator[] _animator;
 
     [SerializeField] private GameObject _received;
     [SerializeField] private GameObject _itemCard; 
@@ -19,6 +18,7 @@ public class OpenChestUI : MonoBehaviour
     private Image _itemImage;
     private TextMeshProUGUI _itemText;
     private List<GameObject> _itemsCard;
+    private OpenChest _openChest;
     private int _chestCost;
 
     public int X_START; // -4
@@ -29,18 +29,19 @@ public class OpenChestUI : MonoBehaviour
     
     private void Start()
     {
+        _openChest = GetComponent<OpenChest>();
         _chestCost = 100;
         _costText[0].text = _chestCost.ToString();
         _costText[1].text = (_chestCost * 10).ToString();
         _itemsCard = new List<GameObject>();
-        OpenChest.ChestOpen += IsItemReceived;
-        OpenChest.CantOpen += IsError;
+        _openChest.ChestOpen += IsItemReceived;
+        _openChest.CantOpen += IsError;
     }
 
     private void OnDestroy()
     {
-        OpenChest.ChestOpen -= IsItemReceived;
-        OpenChest.CantOpen -= IsError;
+        _openChest.ChestOpen -= IsItemReceived;
+        _openChest.CantOpen -= IsError;
     }
 
     private void IsError(string message) 

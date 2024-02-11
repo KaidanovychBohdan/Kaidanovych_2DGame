@@ -12,11 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2af4f107e9659344da89bc6aefff22de, type: 3}
   m_Name: Wizard
   m_EditorClassIdentifier: 
-  CharTypes: 2
+  CharType: 0
+  CharRoles: 2
   Health: 250
+  ATK: 45
+  DEF: 20
   Speed: 10
-  DMGATK: 50
   CritChance: 5
   EnergyRecovery: 5
   EnergyForUltimates: 0
   NeedEnergyToUseUltimates: 120
+  CharXP: 0
+  CharLevel: 1

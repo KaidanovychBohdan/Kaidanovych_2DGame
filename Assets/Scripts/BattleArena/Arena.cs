@@ -5,7 +5,7 @@ using Zenject;
 
 public class Arena : MonoBehaviour
 {
-    [SerializeField] private Fighter[] _heroesTemplate; // сделать або передавать масив обраних героїв або шото придумать
+    [SerializeField] private Fighter[] _heroesTemplate; 
 
     [SerializeField] private Fighter[] _enemiesTemplate;
 
@@ -20,6 +20,24 @@ public class Arena : MonoBehaviour
     {
         _spawner = GetComponent<FighterSpawner>();
         _readyToFight = new Queue<Fighter>();
+    }
+
+    public void SetHeroes(List<Fighter> heroes) 
+    {
+        _heroesTemplate = new Fighter[heroes.Count];
+        for (int i = 0; i < heroes.Count; i++)
+        {
+            _heroesTemplate[i] = heroes[i];
+        }
+    }
+
+    public void SetEnemies(List<Fighter> Enemies)
+    {
+        _enemiesTemplate = new Fighter[Enemies.Count];
+        for (int i = 0; i < Enemies.Count; i++) 
+        {
+            _enemiesTemplate[i] = Enemies[i];
+        }
     }
 
     private void Start()
@@ -43,13 +61,13 @@ public class Arena : MonoBehaviour
             {
                 if (_heroes.Contains(nextFighter)) 
                 {
-                    Debug.Log("heroes move");
                     yield return nextFighter.StartOffensive(GetRandomFighter(_enemies));
+                    nextFighter.TurnMeter(true);
                 }
                 else
                 {
-                    Debug.Log("enemies move");
                     yield return nextFighter.StartOffensive(GetRandomFighter(_heroes));
+                    nextFighter.TurnMeter(true);
                 }
 
             }
@@ -60,7 +78,7 @@ public class Arena : MonoBehaviour
             IncreaseTurnMeter(_enemies);
         }
         if (_heroes.Count > 0) {
-            Debug.Log("Battle win"); // Add coins and some materials
+            Debug.Log("Battle win"); 
             _coin.AddCoins(1000);
             Destroy(this.gameObject);
         }
@@ -72,7 +90,7 @@ public class Arena : MonoBehaviour
     }
     private void IncreaseTurnMeter(List<Fighter> fighter) 
     {
-        fighter.ForEach(f => f.TurnMeter());
+        fighter.ForEach(f => f.TurnMeter(false));
     } 
 
     private Fighter GetNextFighter() 
